@@ -18,7 +18,7 @@ struct tm* localtime_r(const time_t* timep, struct tm* result) {
   localtime_s(result, timep);
   return result;
 }
-#endif // not HAVE_LOCALTIME_R
+#endif  // not HAVE_LOCALTIME_R
 
 namespace unify_api {
 
@@ -83,13 +83,15 @@ std::string Time::ToString() const {
   auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
   std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
 #elif defined(_WIN32) && defined(_WINDOWS)
-  std::chrono::system_clock::time_point tp{
-    std::chrono::duration<int64_t, std::nano>(nanoseconds_)};
+  auto nano = std::chrono::nanoseconds(nanoseconds_);
+  std::chrono::system_clock::time_point tp(nano);
 #else
   auto nano = std::chrono::nanoseconds(nanoseconds_);
   std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
 #endif
-  auto time = system_clock::to_time_t(tp);
+  auto time = std::time_t(
+    std::chrono::duration_cast<std::chrono::seconds>(
+      tp.time_since_epoch()).count());
   struct tm stm;
   auto ret = localtime_r(&time, &stm);
   if (ret == nullptr) {
