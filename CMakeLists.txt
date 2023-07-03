@@ -56,6 +56,7 @@ execute_process(
 )
 
 ### unify_api lib
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.cpp.in ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp @ONLY)
 add_library(${PROJECT_NAME} SHARED version.cpp)
 target_link_libraries(${PROJECT_NAME}

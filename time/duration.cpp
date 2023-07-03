@@ -18,11 +18,11 @@ Duration::Duration(int nanoseconds) {
 }
 
 Duration::Duration(double seconds) {
-  nanoseconds_ = static_cast<int64_t>(seconds * 1000000000UL);
+  nanoseconds_ = static_cast<int64_t>(seconds * 1000000000L);
 }
 
 Duration::Duration(uint32_t seconds, uint32_t nanoseconds) {
-  nanoseconds_ = static_cast<uint64_t>(seconds) * 1000000000UL + nanoseconds;
+  nanoseconds_ = static_cast<int64_t>(seconds) * 1000000000L + nanoseconds;
 }
 
 Duration::Duration(const Duration& other) { nanoseconds_ = other.nanoseconds_; }
@@ -33,7 +33,7 @@ Duration& Duration::operator=(const Duration& other) {
 }
 
 double Duration::ToSecond() const {
-  return static_cast<double>(nanoseconds_) / 1000000000UL;
+  return static_cast<double>(nanoseconds_) / 1000000000L;
 }
 
 int64_t Duration::ToNanosecond() const { return nanoseconds_; }

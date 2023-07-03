@@ -1,0 +1,4 @@
+#pragma once
+
+/* define if localtime_r is available in time.h */
+#cmakedefine HAVE_LOCALTIME_R

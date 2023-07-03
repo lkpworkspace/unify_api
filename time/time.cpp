@@ -13,6 +13,8 @@ Author: likepeng <likepeng0418@163.com>
 #include <sstream>
 #include <thread>
 
+#include "config.h"
+
 #ifndef HAVE_LOCALTIME_R
 struct tm* localtime_r(const time_t* timep, struct tm* result) {
   localtime_s(result, timep);
@@ -36,11 +38,11 @@ Time::Time(int nanoseconds) {
 }
 
 Time::Time(double seconds) {
-  nanoseconds_ = static_cast<int64_t>(seconds * 1000000000UL);
+  nanoseconds_ = static_cast<int64_t>(seconds * 1000000000L);
 }
 
 Time::Time(uint32_t seconds, uint32_t nanoseconds) {
-  nanoseconds_ = static_cast<int64_t>(seconds) * 1000000000UL + nanoseconds;
+  nanoseconds_ = static_cast<int64_t>(seconds) * 1000000000L + nanoseconds;
 }
 
 Time::Time(const Time& other) { nanoseconds_ = other.nanoseconds_; }
@@ -71,7 +73,7 @@ Time Time::MonoTime() {
 }
 
 double Time::ToSecond() const {
-  return static_cast<double>(nanoseconds_) / 1000000000UL;
+  return static_cast<double>(nanoseconds_) / 1000000000L;
 }
 
 bool Time::IsZero() const { return nanoseconds_ == 0; }
@@ -102,12 +104,12 @@ std::string Time::ToString() const {
 #if __GNUC__ >= 5
   ss << std::put_time(ret, "%F %T");
   ss << "." << std::setw(9) << std::setfill('0')
-    << nanoseconds_ % 1000000000UL;
+    << nanoseconds_ % 1000000000L;
 #else
   char date_time[128];
   strftime(date_time, sizeof(date_time), "%F %T", ret);
   ss << std::string(date_time) << "." << std::setw(9) << std::setfill('0')
-     << nanoseconds_ % 1000000000UL;
+     << nanoseconds_ % 1000000000L;
 #endif
   return ss.str();
 }
