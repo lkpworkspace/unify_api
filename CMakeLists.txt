@@ -16,12 +16,11 @@ include (CheckCXXSourceCompiles)
 check_cxx_source_compiles ("
 #include <cstdlib>
 #include <ctime>
-int main()
-{
-    time_t timep;
-    struct tm result;
-    localtime_r(&timep, &result);
-    return EXIT_SUCCESS;
+int main() {
+  time_t timep;
+  struct tm result;
+  localtime_r(&timep, &result);
+  return EXIT_SUCCESS;
 }
 " HAVE_LOCALTIME_R)
 
