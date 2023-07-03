@@ -45,7 +45,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build_${{matrix.build_type}} --config ${{matrix.build_type}}
 
     - name: Test
-      run: ctest --test-dir build -j$(nproc) --output-on-failure
+      run: ctest --test-dir ${{github.workspace}}/build_${{matrix.build_type}} -j$(nproc) --output-on-failure
 
     - name: Install
       run: cd ${{github.workspace}}/build && sudo make install
