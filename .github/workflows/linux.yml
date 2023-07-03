@@ -48,4 +48,4 @@ jobs:
       run: ctest --test-dir ${{github.workspace}}/build_${{matrix.build_type}} -j$(nproc) --output-on-failure
 
     - name: Install
-      run: cd ${{github.workspace}}/build && sudo make install
+      run: cd ${{github.workspace}}/build_${{matrix.build_type}} && sudo make install
