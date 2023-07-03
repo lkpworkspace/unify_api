@@ -16,7 +16,7 @@ class Time {
   static const Time MAX;
   static const Time MIN;
   Time() = default;
-  explicit Time(uint64_t nanoseconds);
+  explicit Time(int64_t nanoseconds);
   explicit Time(int nanoseconds);
   explicit Time(double seconds);
   Time(uint32_t seconds, uint32_t nanoseconds);
@@ -30,7 +30,7 @@ class Time {
 
   double ToSecond() const;
 
-  uint64_t ToNanosecond() const;
+  int64_t ToNanosecond() const;
 
   std::string ToString() const;
 
@@ -49,7 +49,7 @@ class Time {
   bool operator<=(const Time& rhs) const;
 
  private:
-  uint64_t nanoseconds_ = 0;
+  int64_t nanoseconds_ = 0;
 };
 
 std::ostream& operator<<(std::ostream& os, const Time& rhs);

@@ -19,21 +19,21 @@ using std::chrono::high_resolution_clock;
 using std::chrono::steady_clock;
 using std::chrono::system_clock;
 
-const Time Time::MAX = Time(std::numeric_limits<uint64_t>::max());
+const Time Time::MAX = Time(std::numeric_limits<int64_t>::max());
 const Time Time::MIN = Time(1);
 
-Time::Time(uint64_t nanoseconds) { nanoseconds_ = nanoseconds; }
+Time::Time(int64_t nanoseconds) { nanoseconds_ = nanoseconds; }
 
 Time::Time(int nanoseconds) {
-  nanoseconds_ = static_cast<uint64_t>(nanoseconds);
+  nanoseconds_ = static_cast<int64_t>(nanoseconds);
 }
 
 Time::Time(double seconds) {
-  nanoseconds_ = static_cast<uint64_t>(seconds * 1000000000UL);
+  nanoseconds_ = static_cast<int64_t>(seconds * 1000000000UL);
 }
 
 Time::Time(uint32_t seconds, uint32_t nanoseconds) {
-  nanoseconds_ = static_cast<uint64_t>(seconds) * 1000000000UL + nanoseconds;
+  nanoseconds_ = static_cast<int64_t>(seconds) * 1000000000UL + nanoseconds;
 }
 
 Time::Time(const Time& other) { nanoseconds_ = other.nanoseconds_; }
@@ -48,7 +48,7 @@ Time Time::Now() {
   auto nano_time_point =
       std::chrono::time_point_cast<std::chrono::nanoseconds>(now);
   auto epoch = nano_time_point.time_since_epoch();
-  uint64_t now_nano =
+  int64_t now_nano =
       std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
   return Time(now_nano);
 }
@@ -58,7 +58,7 @@ Time Time::MonoTime() {
   auto nano_time_point =
       std::chrono::time_point_cast<std::chrono::nanoseconds>(now);
   auto epoch = nano_time_point.time_since_epoch();
-  uint64_t now_nano =
+  int64_t now_nano =
       std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
   return Time(now_nano);
 }
@@ -69,19 +69,26 @@ double Time::ToSecond() const {
 
 bool Time::IsZero() const { return nanoseconds_ == 0; }
 
-uint64_t Time::ToNanosecond() const { return nanoseconds_; }
+int64_t Time::ToNanosecond() const { return nanoseconds_; }
 
 std::string Time::ToString() const {
-#ifdef __APPLE__
+#if defined(__APPLE__)
   auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
   std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
+#elif defined(_WIN32) && defined(_WINDOWS)
+  auto nano = std::chrono::nanoseconds(nanoseconds_);
+  std::chrono::system_clock::time_point tp(nano);
 #else
   auto nano = std::chrono::nanoseconds(nanoseconds_);
   std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
 #endif
   auto time = system_clock::to_time_t(tp);
   struct tm stm;
+#if defined(_WIN32) && defined(_WINDOWS)
+  auto ret = localtime_s(&time, &stm);
+#else
   auto ret = localtime_r(&time, &stm);
+#endif
   if (ret == nullptr) {
     return std::to_string(static_cast<double>(nanoseconds_) / 1000000000.0);
   }
