@@ -41,6 +41,7 @@ jobs:
           cmake -S . -B build_${{matrix.build_type}} `
                 -A ${{matrix.arch}} `
                 -DBUILD_SHARED_LIBS=${{matrix.lib == 'shared'}} `
+                -DCMAKE_CXX_EXTENSIONS=OFF `
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} `
                 -DCMAKE_CXX_STANDARD_REQUIRED=ON `
                 -DCMAKE_EXE_LINKER_FLAGS='/NOIMPLIB' `
