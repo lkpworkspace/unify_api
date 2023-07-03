@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build-msvc:
-    name: ${{matrix.msvc}}-${{matrix.arch}}-C++${{matrix.std}}-${{matrix.build_type}}-${{matrix.lib}}
+    name: ${{matrix.msvc}}-${{matrix.arch}}-C++${{matrix.std}}-${{matrix.build_type}}
     runs-on: ${{matrix.os}}
     defaults:
       run:
@@ -17,7 +17,6 @@ jobs:
       matrix:
         arch: [Win32, x64]
         build_type: [Debug, Release]
-        lib: [shared, static]
         msvc: [VS-16-2019, VS-17-2022]
         std: [17, 20]
         include:
@@ -40,7 +39,6 @@ jobs:
         run: |
           cmake -S . -B build_${{matrix.build_type}} `
                 -A ${{matrix.arch}} `
-                -DBUILD_SHARED_LIBS=${{matrix.lib == 'shared'}} `
                 -DCMAKE_CXX_EXTENSIONS=OFF `
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} `
                 -DCMAKE_CXX_STANDARD_REQUIRED=ON `
