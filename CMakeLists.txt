@@ -2,11 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 PROJECT(unify_api)
 
 ### option
-SET(CMAKE_C_STANDARD 11)
-SET(CMAKE_C_FLAGS "-fPIC -DPIC -Werror=return-type")
-SET(CMAKE_CXX_FLAGS "-fPIC -DPIC -Werror=return-type")
-SET(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
-
 option(ENABLE_TEST "gen test bin" ON)
 if (ENABLE_TEST)
     enable_testing()

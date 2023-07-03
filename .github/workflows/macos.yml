@@ -26,6 +26,8 @@ jobs:
         run: bash ${{github.workspace}}/cpplint.bash
 
       - name: Configure
+        env:
+          CXXFLAGS: -Wall -Wextra -Wsign-conversion -Wtautological-compare -Wformat-nonliteral -Wundef -Werror ${{env.CXXFLAGS}}
         shell: bash
         run: |
           cmake -S . -B build_${{matrix.build_type}} \
