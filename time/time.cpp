@@ -86,9 +86,6 @@ std::string Time::ToString() const {
 #if defined(__APPLE__)
   auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
   std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
-#elif defined(_WIN32) && defined(_WINDOWS)
-  auto nano = std::chrono::nanoseconds(nanoseconds_);
-  std::chrono::system_clock::time_point tp(nano);
 #else
   auto nano = std::chrono::nanoseconds(nanoseconds_);
   std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
