@@ -1,3 +1,9 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
 
 #define DISALLOW_COPY_AND_ASSIGN(classname)         \

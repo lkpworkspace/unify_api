@@ -1,9 +1,15 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #include "time/duration.h"
 #include <chrono>
 #include <iomanip>
 #include <thread>
 
-namespace common {
+namespace unify_api {
 
 Duration::Duration(int64_t nanoseconds) { nanoseconds_ = nanoseconds; }
 
@@ -99,4 +105,4 @@ std::ostream& operator<<(std::ostream& os, const Duration& rhs) {
   return os;
 }
 
-}  // namespace common
+}  // namespace unify_api

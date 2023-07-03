@@ -1,8 +1,14 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 
-namespace common {
+namespace unify_api {
 
 // from stdlib:
 // int setenv(const char *name, const char *value, int overwrite);
@@ -17,4 +23,4 @@ inline const std::string GetEnv(const std::string& key) {
   return std::string(var);
 }
 
-}  // namespace common
+}  // namespace unify_api

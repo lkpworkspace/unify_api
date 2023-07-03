@@ -1,9 +1,15 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
 #include <vector>
 #include <string>
 #include <sstream>
 
-namespace common {
+namespace unify_api {
 
 std::vector<std::string> SpliteStr(const std::string& str, const char delim) {
   std::vector<std::string> key_nums;
@@ -15,7 +21,9 @@ std::vector<std::string> SpliteStr(const std::string& str, const char delim) {
   return key_nums;
 }
 
-std::string SplicingStr(std::initializer_list<std::string> str_list, const char delim = '\0') {
+std::string SplicingStr(
+    std::initializer_list<std::string> str_list,
+    const char delim = '\0') {
   std::string res;
   if (str_list.size() == 0) {
     return res;
@@ -30,4 +38,4 @@ std::string SplicingStr(std::initializer_list<std::string> str_list, const char 
   return res;
 }
 
-}  // namespace common
+}  // namespace unify_api

@@ -1,6 +1,12 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #include "time/rate.h"
 
-namespace common {
+namespace unify_api {
 
 Rate::Rate(double frequency)
     : start_(Time::Now()),
@@ -53,4 +59,4 @@ void Rate::Reset() { start_ = Time::Now(); }
 
 Duration Rate::CycleTime() const { return actual_cycle_time_; }
 
-}  // namespace common
+}  // namespace unify_api

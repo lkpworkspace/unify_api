@@ -1,4 +1,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 
-add_executable(dir_test dir_test.cpp dir.cpp)
-target_link_libraries(dir_test gtest_main gtest pthread)
+### source
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_LIST_DIR} NAME_WE)
+project(${PROJECT_NAME})
+aux_source_directory(. __srcs)
+
+### lib
+add_library(unify_api_dir OBJECT ${__srcs})
+
+### test
+add_subdirectory(test)

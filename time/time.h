@@ -1,9 +1,15 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
 #include <string>
 
 #include "time/duration.h"
 
-namespace common {
+namespace unify_api {
 
 class Time {
  public:
@@ -48,4 +54,4 @@ class Time {
 
 std::ostream& operator<<(std::ostream& os, const Time& rhs);
 
-}  // namespace common
+}  // namespace unify_api

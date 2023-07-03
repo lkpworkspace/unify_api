@@ -1,28 +1,31 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #include "dir/dir.h"
 
-#include <dirent.h>
-
-namespace common {
+namespace unify_api {
 
 std::vector<std::pair<FileType, std::string>>
-GetAllFilepath(
-  const std::string& path,
-  unsigned char file_type) {
+GetAllFilepath(const std::string& path) {
   std::vector<std::pair<FileType, std::string>> res;
-  DIR* dir = opendir(path.c_str());
-  if (dir == nullptr) {
+  if (!stdfs::is_directory(path)) {
     return res;
   }
-  struct dirent* entry = nullptr;
-  while (nullptr != (entry = readdir(dir))) {
-    if (entry->d_type == DT_REG && (file_type & kFileTypeReg)) {
-      res.emplace_back(std::make_pair(kFileTypeReg, path + entry->d_name));
-    } else if (entry->d_type == DT_DIR && (file_type & kFileTypeDir)) {
-      res.emplace_back(std::make_pair(kFileTypeDir, path + entry->d_name));
+  for (const auto& entry : stdfs::directory_iterator(path)) {
+    FileType type;
+    if (entry.is_directory()) {
+      type = FileType::kDir;
+    } else if (entry.is_regular_file()) {
+      type = FileType::kReg;
+    } else {
+      continue;
     }
+    res.emplace_back(type, entry.path().string());
   }
-  closedir(dir);
   return res;
 }
 
-}  // namespace common
+}  // namespace unify_api

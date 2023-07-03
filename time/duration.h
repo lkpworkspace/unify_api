@@ -1,8 +1,15 @@
-#pragma once
-#include <stdint.h>
-#include <iostream>
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
 
-namespace common {
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
+#pragma once
+#include <cstdint>
+#include <iostream>
+#include <utility>
+
+namespace unify_api {
 
 class Duration {
  public:
@@ -45,4 +52,4 @@ class Duration {
 
 std::ostream& operator<<(std::ostream& os, const Duration& rhs);
 
-}  // namespace common
+}  // namespace unify_api

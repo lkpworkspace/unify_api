@@ -1,13 +1,19 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #include "time/time.h"
 
-#include <time.h>
+#include <ctime>
 #include <chrono>
 #include <iomanip>
 #include <limits>
 #include <sstream>
 #include <thread>
 
-namespace common {
+namespace unify_api {
 
 using std::chrono::high_resolution_clock;
 using std::chrono::steady_clock;
@@ -38,7 +44,7 @@ Time& Time::operator=(const Time& other) {
 }
 
 Time Time::Now() {
-  auto now = high_resolution_clock::now();
+  auto now = system_clock::now();
   auto nano_time_point =
       std::chrono::time_point_cast<std::chrono::nanoseconds>(now);
   auto epoch = nano_time_point.time_since_epoch();
@@ -66,8 +72,13 @@ bool Time::IsZero() const { return nanoseconds_ == 0; }
 uint64_t Time::ToNanosecond() const { return nanoseconds_; }
 
 std::string Time::ToString() const {
+#ifdef __APPLE__
+  auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
+  std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
+#else
   auto nano = std::chrono::nanoseconds(nanoseconds_);
-  system_clock::time_point tp(nano);
+  std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
+#endif
   auto time = system_clock::to_time_t(tp);
   struct tm stm;
   auto ret = localtime_r(&time, &stm);
@@ -78,7 +89,8 @@ std::string Time::ToString() const {
   std::stringstream ss;
 #if __GNUC__ >= 5
   ss << std::put_time(ret, "%F %T");
-  ss << "." << std::setw(9) << std::setfill('0') << nanoseconds_ % 1000000000UL;
+  ss << "." << std::setw(9) << std::setfill('0')
+    << nanoseconds_ % 1000000000UL;
 #else
   char date_time[128];
   strftime(date_time, sizeof(date_time), "%F %T", ret);
@@ -90,7 +102,7 @@ std::string Time::ToString() const {
 
 void Time::SleepUntil(const Time& time) {
   auto nano = std::chrono::nanoseconds(time.ToNanosecond());
-  system_clock::time_point tp(nano);
+  std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
   std::this_thread::sleep_until(tp);
 }
 
@@ -145,4 +157,4 @@ std::ostream& operator<<(std::ostream& os, const Time& rhs) {
   return os;
 }
 
-}  // namespace common
+}  // namespace unify_api

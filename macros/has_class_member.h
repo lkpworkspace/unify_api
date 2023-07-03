@@ -1,3 +1,9 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
 
 // F 函数名
@@ -16,15 +22,16 @@
 // } else {
 //   std::cout << "no" << std::endl;
 // }
-#define DECLARE_HAS_CLASS_MEMBER(F, C)                                                  \
-template<typename T, typename... Args>                                                  \
-struct C {                                                                              \
-    template<typename U>                                                                \
-    constexpr static auto check(int)->                                                  \
-        decltype(std::declval<U>().F(std::declval<Args>()...), std::true_type());       \
-                                                                                        \
-    template<typename U>                                                                \
-    constexpr static std::false_type check(...);                                        \
-                                                                                        \
-    static constexpr bool value = decltype(check<T>(0))::value;                         \
+#define DECLARE_HAS_CLASS_MEMBER(F, C)                                        \
+template<typename T, typename... Args>                                        \
+struct C {                                                                    \
+    template<typename U>                                                      \
+    constexpr static auto check(int)->                                        \
+        decltype(std::declval<U>().F(std::declval<Args>()...),                \
+            std::true_type());                                                \
+                                                                              \
+    template<typename U>                                                      \
+    constexpr static std::false_type check(...);                              \
+                                                                              \
+    static constexpr bool value = decltype(check<T>(0))::value;               \
 }

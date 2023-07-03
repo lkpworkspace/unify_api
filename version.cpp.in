@@ -1,0 +1,23 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
+#include "version.h"
+#define GIT_BRANCH "@GIT_BRANCH@"
+#define GIT_COMMIT_ID "@GIT_COMMIT_ID@"
+#define GIT_COMMIT_DATE "@GIT_COMMIT_DATE@"
+
+namespace unify_api {
+
+std::string GetVersion() {
+    std::string version = GIT_BRANCH;
+    version += "\n";
+    version += GIT_COMMIT_ID;
+    version += "\n";
+    version += GIT_COMMIT_DATE;
+    return version;
+}
+
+}  // namespace unify_api

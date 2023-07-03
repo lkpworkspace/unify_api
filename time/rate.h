@@ -1,8 +1,14 @@
+/****************************************************************************
+Copyright (c) 2023, likepeng
+All rights reserved.
+
+Author: likepeng <likepeng0418@163.com>
+****************************************************************************/
 #pragma once
 #include "time/duration.h"
 #include "time/time.h"
 
-namespace common {
+namespace unify_api {
 
 class Rate {
  public:
@@ -20,4 +26,4 @@ class Rate {
   Duration actual_cycle_time_;
 };
 
-}  // namespace common
+}  // namespace unify_api
