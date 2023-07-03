@@ -25,9 +25,6 @@ jobs:
       with:
         version: 1.10.0
 
-    - name: Check code style
-      run: bash ${{github.workspace}}/cpplint.bash
-
     - name: Configure CMake
       env:
           CXXFLAGS: -fPIC -Wall -Wextra -Wsign-conversion -Wtautological-compare -Wformat-nonliteral -Wundef -Werror ${{env.CXXFLAGS}}
