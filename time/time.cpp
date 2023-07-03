@@ -13,6 +13,13 @@ Author: likepeng <likepeng0418@163.com>
 #include <sstream>
 #include <thread>
 
+#ifndef HAVE_LOCALTIME_R
+struct tm* localtime_r(const time_t* timep, struct tm* result) {
+  localtime_s(result, timep);
+  return result;
+}
+#endif // not HAVE_LOCALTIME_R
+
 namespace unify_api {
 
 using std::chrono::high_resolution_clock;
@@ -76,19 +83,15 @@ std::string Time::ToString() const {
   auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
   std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
 #elif defined(_WIN32) && defined(_WINDOWS)
-  auto nano = std::chrono::nanoseconds(nanoseconds_);
-  std::chrono::system_clock::time_point tp(nano);
+  std::chrono::system_clock::time_point tp{
+    std::chrono::duration<int64_t, std::nano>(nanoseconds_)};
 #else
   auto nano = std::chrono::nanoseconds(nanoseconds_);
   std::chrono::time_point<system_clock, std::chrono::nanoseconds> tp(nano);
 #endif
   auto time = system_clock::to_time_t(tp);
   struct tm stm;
-#if defined(_WIN32) && defined(_WINDOWS)
-  auto ret = localtime_s(&time, &stm);
-#else
   auto ret = localtime_r(&time, &stm);
-#endif
   if (ret == nullptr) {
     return std::to_string(static_cast<double>(nanoseconds_) / 1000000000.0);
   }

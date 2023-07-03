@@ -10,6 +10,21 @@ endif()
 ### deps
 FIND_PACKAGE(Threads REQUIRED)
 
+### check
+include (CheckCXXSourceCompiles)
+
+check_cxx_source_compiles ("
+#include <cstdlib>
+#include <ctime>
+int main()
+{
+    time_t timep;
+    struct tm result;
+    localtime_r(&timep, &result);
+    return EXIT_SUCCESS;
+}
+" HAVE_LOCALTIME_R)
+
 ### include
 INCLUDE_DIRECTORIES(.)
 
