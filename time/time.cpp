@@ -15,12 +15,14 @@ Author: likepeng <likepeng0418@163.com>
 
 #include "config.h"
 
+#ifdef _WIN32
 #ifndef HAVE_LOCALTIME_R
 struct tm* localtime_r(const time_t* timep, struct tm* result) {
   localtime_s(result, timep);
   return result;
 }
 #endif  // not HAVE_LOCALTIME_R
+#endif  // _WIN32
 
 namespace unify_api {
 
