@@ -2,9 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 
 ### test
 add_executable(dir_test dir_test.cpp)
-target_link_libraries(dir_test
-    unify_api_dir
-)
+target_link_libraries(dir_test ${PROJECT_NAME})
 
 ### run test
 add_test(

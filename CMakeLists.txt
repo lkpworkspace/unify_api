@@ -1,18 +1,17 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 PROJECT(unify_api)
 
-### option
+### option and var
 option(ENABLE_TEST "gen test bin" ON)
 if (ENABLE_TEST)
     enable_testing()
 endif()
 
-set (CMAKE_C_VISIBILITY_PRESET hidden)
-set (CMAKE_CXX_VISIBILITY_PRESET hidden)
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-set (CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
-### install path
 set(UNIFY_API_INC_DIR ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
 set(UNIFY_API_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 set(UNIFY_API_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -39,12 +38,22 @@ int main() {
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
+### unify_api lib
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
+add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+
 ### sub dir
 add_subdirectory(env)
 add_subdirectory(macros)
 add_subdirectory(time)
 add_subdirectory(dir)
 add_subdirectory(string_parser)
+
+### export
+generate_export_header (${PROJECT_NAME}
+  EXPORT_MACRO_NAME UNIFY_API_EXPORT
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/export.h)
 
 ### version
 execute_process(
@@ -65,20 +74,6 @@ execute_process(
   OUTPUT_VARIABLE GIT_COMMIT_DATE
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-
-### unify_api lib
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
-add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_BINARY_DIR}/version.h)
-target_link_libraries(${PROJECT_NAME}
-    unify_api_dir
-    unify_api_time
-)
-
-### export
-generate_export_header (${PROJECT_NAME}
-  EXPORT_MACRO_NAME UNIFY_API_EXPORT
-  EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/export.h)
 
 ### install
 install(TARGETS ${PROJECT_NAME}

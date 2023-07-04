@@ -17,7 +17,9 @@ Author: likepeng <likepeng0418@163.com>
 #include <unistd.h>
 #endif
 
+#ifndef MAX_PATH
 #define MAX_PATH 512
+#endif
 
 namespace unify_api {
 
@@ -45,7 +47,7 @@ stdfs::path GetSelfPath() {
   char path[MAX_PATH];
   memset(path, 0, sizeof(path));
 #ifdef UNIFY_API_OS_WINDOWS
-  HMODULE hMod = GetModuleHandel(NULL);
+  HMODULE hMod = GetModuleHandle(NULL);
   DWORD len = GetModuleFileName(hMod, path, sizeof(path));
   if (len == 0) {
     return stdfs::path();
