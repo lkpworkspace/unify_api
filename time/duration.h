@@ -51,6 +51,7 @@ class UNIFY_API_EXPORT Duration {
   int64_t nanoseconds_ = 0;
 };
 
-std::ostream& operator<<(std::ostream& os, const Duration& rhs);
+UNIFY_API_EXPORT std::ostream& operator<<(
+  std::ostream& os, const Duration& rhs);
 
 }  // namespace unify_api

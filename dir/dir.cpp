@@ -6,9 +6,13 @@ Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
 #include "dir/dir.h"
 #include <cstring>
+#include <iostream>
 #include "platform.h"
 #ifdef UNIFY_API_OS_WINDOWS
 #include <Windows.h>
+#elif defined(UNIFY_API_OS_MAC)
+#include <unistd.h>
+#include <mach-o/dyld.h>
 #else
 #include <unistd.h>
 #endif
@@ -44,6 +48,15 @@ stdfs::path GetSelfPath() {
   HMODULE hMod = GetModuleHandel(NULL);
   DWORD len = GetModuleFileName(hMod, path, sizeof(path));
   if (len == 0) {
+    return stdfs::path();
+  }
+#elif defined(UNIFY_API_OS_MAC)
+  char exec_path[MAX_PATH];
+  uint32_t len = sizeof(exec_path);
+  if (_NSGetExecutablePath(exec_path, &len)) {
+    return stdfs::path();
+  }
+  if (realpath(exec_path, path) == nullptr) {
     return stdfs::path();
   }
 #else
