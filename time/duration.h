@@ -8,10 +8,11 @@ Author: likepeng <likepeng0418@163.com>
 #include <cstdint>
 #include <iostream>
 #include <utility>
+#include "export.h"
 
 namespace unify_api {
 
-class Duration {
+class UNIFY_API_EXPORT Duration {
  public:
   Duration() {}
   explicit Duration(int64_t nanoseconds);

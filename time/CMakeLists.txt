@@ -15,5 +15,5 @@ add_subdirectory(test)
 file(GLOB header_file "*.h")
 install (FILES ${header_file}
     PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-    DESTINATION ${UNIFY_API_INC_DIR}
+    DESTINATION ${UNIFY_API_INC_DIR}/${PROJECT_NAME}
 )

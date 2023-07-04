@@ -5,12 +5,13 @@ All rights reserved.
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
 #pragma once
+#include "export.h"
 #include "time/duration.h"
 #include "time/time.h"
 
 namespace unify_api {
 
-class Rate {
+class UNIFY_API_EXPORT Rate {
  public:
   explicit Rate(double frequency);
   explicit Rate(uint64_t nanoseconds);

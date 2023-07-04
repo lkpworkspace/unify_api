@@ -17,6 +17,7 @@ namespace stdfs = std::experimental::filesystem;
 #else
 #error "no filesytem found"
 #endif
+#include "export.h"
 
 namespace unify_api {
 
@@ -26,7 +27,11 @@ enum class FileType : int {
 };
 
 /* eg: GetAllFilepath("/home/") */
-std::vector<std::pair<FileType, std::string>>
+UNIFY_API_EXPORT std::vector<std::pair<FileType, std::string>>
 GetAllFilepath(const std::string& path);
+
+UNIFY_API_EXPORT stdfs::path GetSelfPath();
+
+UNIFY_API_EXPORT stdfs::path GetCurWorkPath();
 
 }  // namespace unify_api

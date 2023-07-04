@@ -7,6 +7,11 @@ if (ENABLE_TEST)
     enable_testing()
 endif()
 
+set (CMAKE_C_VISIBILITY_PRESET hidden)
+set (CMAKE_CXX_VISIBILITY_PRESET hidden)
+set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set (CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
 ### install path
 set(UNIFY_API_INC_DIR ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
 set(UNIFY_API_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
@@ -17,6 +22,7 @@ FIND_PACKAGE(Threads REQUIRED)
 
 ### check
 include (CheckCXXSourceCompiles)
+include (GenerateExportHeader)
 
 check_cxx_source_compiles ("
 #include <cstdlib>
@@ -30,7 +36,8 @@ int main() {
 " HAVE_LOCALTIME_R)
 
 ### include
-INCLUDE_DIRECTORIES(.)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 ### sub dir
 add_subdirectory(env)
@@ -60,13 +67,18 @@ execute_process(
 )
 
 ### unify_api lib
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.cpp.in ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp @ONLY)
-add_library(${PROJECT_NAME} SHARED version.cpp)
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
+add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 target_link_libraries(${PROJECT_NAME}
     unify_api_dir
     unify_api_time
 )
+
+### export
+generate_export_header (${PROJECT_NAME}
+  EXPORT_MACRO_NAME UNIFY_API_EXPORT
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/export.h)
 
 ### install
 install(TARGETS ${PROJECT_NAME}
@@ -74,6 +86,11 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION ${UNIFY_API_LIB_DIR}
     RUNTIME DESTINATION ${UNIFY_API_BIN_DIR}
 )
+install (FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/version.h
+  platform.h
+  DESTINATION ${UNIFY_API_INC_DIR})
 install(CODE "
   file(
     WRITE ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}_version.txt

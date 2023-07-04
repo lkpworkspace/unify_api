@@ -8,6 +8,8 @@ Author: likepeng <likepeng0418@163.com>
 #include <cstdlib>
 #include <string>
 
+#include "platform.h"
+
 namespace unify_api {
 
 // from stdlib:
@@ -16,7 +18,7 @@ namespace unify_api {
 
 inline const std::string GetEnv(const std::string& key) {
   char* var = nullptr;
-#if defined(_WIN32)
+#ifdef UNIFY_API_OS_WINDOWS
   size_t len = 0;
   _dupenv_s(&var, &len, key.c_str());
 #else
@@ -32,7 +34,7 @@ inline void SetEnv(
     const std::string& key,
     const std::string& value,
     bool overwrite = true) {
-#if defined(_WIN32)
+#ifdef UNIFY_API_OS_WINDOWS
   _putenv_s(key.c_str(), value.c_str());
 #else
   setenv(key.c_str(), value.c_str(), overwrite);

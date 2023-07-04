@@ -7,11 +7,12 @@ Author: likepeng <likepeng0418@163.com>
 #pragma once
 #include <string>
 
+#include "export.h"
 #include "time/duration.h"
 
 namespace unify_api {
 
-class Time {
+class UNIFY_API_EXPORT Time {
  public:
   static const Time MAX;
   static const Time MIN;

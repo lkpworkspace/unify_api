@@ -14,15 +14,16 @@ Author: likepeng <likepeng0418@163.com>
 #include <thread>
 
 #include "config.h"
+#include "platform.h"
 
-#ifdef _WIN32
+#ifdef UNIFY_API_OS_WINDOWS
 #ifndef HAVE_LOCALTIME_R
 struct tm* localtime_r(const time_t* timep, struct tm* result) {
   localtime_s(result, timep);
   return result;
 }
 #endif  // not HAVE_LOCALTIME_R
-#endif  // _WIN32
+#endif  // UNIFY_API_OS_WINDOWS
 
 namespace unify_api {
 
@@ -83,7 +84,7 @@ bool Time::IsZero() const { return nanoseconds_ == 0; }
 int64_t Time::ToNanosecond() const { return nanoseconds_; }
 
 std::string Time::ToString() const {
-#if defined(__APPLE__)
+#ifdef UNIFY_API_OS_MAC
   auto micro = std::chrono::microseconds(nanoseconds_ / 1000);
   std::chrono::time_point<system_clock, std::chrono::microseconds> tp(micro);
 #else
