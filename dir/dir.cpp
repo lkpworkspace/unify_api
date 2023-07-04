@@ -5,6 +5,8 @@ All rights reserved.
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
 #include "dir/dir.h"
+#include <cstring>
+#include "platform.h"
 #ifdef UNIFY_API_OS_WINDOWS
 #include <Windows.h>
 #else
