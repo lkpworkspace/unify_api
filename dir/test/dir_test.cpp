@@ -10,7 +10,7 @@ Author: likepeng <likepeng0418@163.com>
 int main() {
   auto file_list = unify_api::GetAllFilepath("/");
   for (const auto& it : file_list) {
-    std::cout << it.second << std::endl;
+    std::cout << static_cast<int>(it.first) << ":" << it.second << std::endl;
   }
   return 0;
 }

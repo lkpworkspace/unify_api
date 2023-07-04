@@ -1,1 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
+
+### install
+file(GLOB header_file "*.h")
+install (FILES ${header_file}
+    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
+    DESTINATION ${UNIFY_API_INC_DIR}
+)

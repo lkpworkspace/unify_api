@@ -11,7 +11,7 @@ Author: likepeng <likepeng0418@163.com>
 
 namespace unify_api {
 
-std::vector<std::string> SpliteStr(const std::string& str, const char delim) {
+std::vector<std::string> SplitStr(const std::string& str, const char delim) {
   std::vector<std::string> key_nums;
   std::string item;
   std::stringstream ss(str);
@@ -21,7 +21,7 @@ std::vector<std::string> SpliteStr(const std::string& str, const char delim) {
   return key_nums;
 }
 
-std::string SplicingStr(
+std::string JoinStr(
     std::initializer_list<std::string> str_list,
     const char delim = '\0') {
   std::string res;
