@@ -13,8 +13,8 @@ Author: likepeng <likepeng0418@163.com>
 #include <sstream>
 #include <thread>
 
-#include "config.h"
-#include "platform.h"
+#include "unify_api_config.h"
+#include "unify_api_platform.h"
 
 #ifdef UNIFY_API_OS_WINDOWS
 #ifndef HAVE_LOCALTIME_R

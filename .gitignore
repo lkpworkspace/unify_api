@@ -33,3 +33,7 @@
 
 build
 .vscode
+
+unify_api_config.h
+unify_api_export.h
+unify_api_version.h

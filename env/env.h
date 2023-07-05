@@ -8,7 +8,7 @@ Author: likepeng <likepeng0418@163.com>
 #include <cstdlib>
 #include <string>
 
-#include "platform.h"
+#include "unify_api_platform.h"
 
 namespace unify_api {
 

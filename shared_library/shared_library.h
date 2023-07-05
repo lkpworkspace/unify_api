@@ -8,13 +8,13 @@ Author: likepeng <likepeng0418@163.com>
 #include <mutex>
 #include <stdexcept>
 #include <string>
-#include "platform.h"
+#include "unify_api_platform.h"
 #if defined(UNIFY_API_OS_WINDOWS)
 #include <Windows.h>
 #else
 #include <dlfcn.h>
 #endif
-#include "export.h"
+#include "unify_api_export.h"
 
 namespace unify_api {
 

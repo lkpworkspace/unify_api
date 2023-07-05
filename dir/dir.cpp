@@ -7,7 +7,7 @@ Author: likepeng <likepeng0418@163.com>
 #include "dir/dir.h"
 #include <cstring>
 #include <iostream>
-#include "platform.h"
+#include "unify_api_platform.h"
 #ifdef UNIFY_API_OS_WINDOWS
 #include <Windows.h>
 #elif defined(UNIFY_API_OS_MAC)

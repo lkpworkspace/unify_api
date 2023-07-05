@@ -17,7 +17,7 @@ namespace stdfs = std::experimental::filesystem;
 #else
 #error "no filesytem found"
 #endif
-#include "export.h"
+#include "unify_api_export.h"
 
 namespace unify_api {
 

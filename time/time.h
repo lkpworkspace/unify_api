@@ -7,7 +7,7 @@ Author: likepeng <likepeng0418@163.com>
 #pragma once
 #include <string>
 
-#include "export.h"
+#include "unify_api_export.h"
 #include "time/duration.h"
 
 namespace unify_api {

@@ -36,25 +36,6 @@ int main() {
 
 ### include
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
-### unify_api lib
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
-add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_BINARY_DIR}/version.h)
-
-### sub dir
-add_subdirectory(env)
-add_subdirectory(macros)
-add_subdirectory(time)
-add_subdirectory(dir)
-add_subdirectory(string_parser)
-add_subdirectory(shared_library)
-
-### export
-generate_export_header (${PROJECT_NAME}
-  EXPORT_MACRO_NAME UNIFY_API_EXPORT
-  EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/export.h)
 
 ### version
 execute_process(
@@ -76,6 +57,24 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+### unify_api lib
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_version.h @ONLY)
+add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_version.h)
+
+### sub dir
+add_subdirectory(env)
+add_subdirectory(macros)
+add_subdirectory(time)
+add_subdirectory(dir)
+add_subdirectory(string_parser)
+add_subdirectory(shared_library)
+
+### export
+generate_export_header (${PROJECT_NAME}
+  EXPORT_MACRO_NAME UNIFY_API_EXPORT
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_export.h)
+
 ### install
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${UNIFY_API_LIB_DIR}
@@ -83,9 +82,9 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${UNIFY_API_BIN_DIR}
 )
 install (FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/export.h
-  ${CMAKE_CURRENT_BINARY_DIR}/version.h
-  platform.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_export.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_platform.h
   DESTINATION ${UNIFY_API_INC_DIR})
 install(CODE "
   file(
