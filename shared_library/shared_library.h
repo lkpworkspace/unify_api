@@ -57,7 +57,7 @@ class UNIFY_API_EXPORT SharedLibrary {
 
  private:
 #if defined(UNIFY_API_OS_WINDOWS)
-  HMODULE handle_;
+  HMODULE handle_{ nullptr };
 #else
   void* handle_{ nullptr };
 #endif

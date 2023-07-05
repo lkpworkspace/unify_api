@@ -13,16 +13,13 @@ SharedLibrary::~SharedLibrary() {
 }
 
 bool SharedLibrary::Load(const std::string& path, std::string* err_msg) {
-  return Load(path, Flags::kGlobal, err_msg); 
+  return Load(path, Flags::kGlobal, err_msg);
 }
 
 bool SharedLibrary::Load(
     const std::string& path,
     Flags flags,
     std::string* err_msg) {
-#if defined(UNIFY_API_OS_WINDOWS)
-  // TODO(likepeng)
-#else
   std::lock_guard<std::mutex> lock(mutex_);
   if (handle_) {
     if (err_msg) {
@@ -30,7 +27,15 @@ bool SharedLibrary::Load(
     }
     return false;
   }
-
+#if defined(UNIFY_API_OS_WINDOWS)
+  handle_ = LoadLibrary(path.c_str());
+  if (handle_ == nullptr) {
+    if (err_msg) {
+      *err_msg = "failed to load " + path;
+    }
+    return false;
+  }
+#else
   int real_flag = RTLD_LAZY;
   if (static_cast<int>(flags) & static_cast<int>(Flags::kLocal)) {
     real_flag |= RTLD_LOCAL;
@@ -45,15 +50,18 @@ bool SharedLibrary::Load(
     }
     return false;
   }
-  path_ = path;
 #endif
+  path_ = path;
   return true;
 }
 
 void SharedLibrary::Unload() {
   std::lock_guard<std::mutex> lock(mutex_);
 #if defined(UNIFY_API_OS_WINDOWS)
-  // TODO(likepeng)
+  if (handle_) {
+    FreeLibrary(handle_);
+    handle_ = nullptr;
+  }
 #else
   if (handle_) {
     dlclose(handle_);
@@ -64,11 +72,7 @@ void SharedLibrary::Unload() {
 
 bool SharedLibrary::IsLoaded() {
   std::lock_guard<std::mutex> lock(mutex_);
-#if defined(UNIFY_API_OS_WINDOWS)
-  // TODO(likepeng)
-#else
   return handle_ != nullptr;
-#endif
 }
 
 bool SharedLibrary::HasSymbol(const std::string& name) {
@@ -77,12 +81,16 @@ bool SharedLibrary::HasSymbol(const std::string& name) {
 
 void* SharedLibrary::GetSymbol(const std::string& name, std::string* err_msg) {
   std::lock_guard<std::mutex> lock(mutex_);
-#if defined(UNIFY_API_OS_WINDOWS)
-  // TODO(likepeng)
-  return nullptr;
-#else
   if (!handle_) return nullptr;
-
+#if defined(UNIFY_API_OS_WINDOWS)
+  void* result = GetProcAddress(handle_, name.c_str());
+  if (!result) {
+    if (err_msg) {
+      *err_msg = name;
+    }
+    return nullptr;
+  }
+#else
   void* result = dlsym(handle_, name.c_str());
   if (!result) {
     const char* err = dlerror();
@@ -91,8 +99,8 @@ void* SharedLibrary::GetSymbol(const std::string& name, std::string* err_msg) {
     }
     return nullptr;
   }
-  return result;
 #endif
+  return result;
 }
 
 }  // namespace unify_api
