@@ -5,6 +5,7 @@ All rights reserved.
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
 #pragma once
+#include <string>
 #include <atomic>
 #include <mutex>
 #include <vector>
@@ -71,4 +72,4 @@ class Poller final {
   DISALLOW_COPY_AND_ASSIGN(Poller)
 };
 
-}  // namespace unfiy_api
+}  // namespace unify_api

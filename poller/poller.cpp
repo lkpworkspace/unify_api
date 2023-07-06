@@ -106,8 +106,7 @@ bool Poller::Add(const PollerEvent& poller_ev, std::string* err_msg) {
 #elif defined(UNIFY_API_OS_MAC)
   (void)err_msg;
   struct kevent kev;
-  switch (poller_ev.event)
-  {
+  switch (poller_ev.event) {
   case PollerEventType::kIn:
     EV_SET(&kev, poller_ev.fd, EVFILT_READ, EV_ADD, 0, 0, nullptr);
     break;
