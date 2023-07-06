@@ -39,6 +39,8 @@
 #include <cxxabi.h>
 #include <cstdlib>
 
+#include "unify_api_platform.h"
+
 namespace cmdline{
 
 namespace detail{
@@ -104,11 +106,15 @@ Target lexical_cast(const Source &arg)
 
 static inline std::string demangle(const std::string &name)
 {
+#if defined(UNIFY_API_OS_WINDOWS)
+  return name;
+#else
   int status=0;
   char *p=abi::__cxa_demangle(name.c_str(), 0, 0, &status);
   std::string ret(p);
   free(p);
   return ret;
+#endif // UNIFY_API_OS_WINDOWS
 }
 
 template <class T>
@@ -420,7 +426,7 @@ public:
     for (size_t i=0; i<argc; i++)
       argv[i]=args[i].c_str();
 
-    return parse(argc, &argv[0]);
+    return parse(static_cast<int>(argc), &argv[0]);
   }
 
   bool parse(int argc, const char * const argv[]){
@@ -533,7 +539,7 @@ public:
   void parse_check(const std::vector<std::string> &args){
     if (!options.count("help"))
       add("help", '?', "print this message");
-    check(args.size(), parse(args));
+    check(static_cast<int>(args.size()), parse(args));
   }
 
   void parse_check(int argc, char *argv[]){
