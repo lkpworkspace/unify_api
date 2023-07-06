@@ -223,7 +223,10 @@ int Poller::Wait(
   add_ev_list_.clear();
   del_ev_list_.clear();
 #else
-  int ev_count = epoll_wait(poll_fd_, evs_, max_ev_count_, timeout_ms);
+  int ev_count = epoll_wait(poll_fd_,
+    evs_,
+    static_cast<int>(max_ev_count_),
+    timeout_ms);
   if (0 > ev_count) {
     if (err_msg!= nullptr) {
       *err_msg = std::string("epoll wait error: ") + strerror(errno);
