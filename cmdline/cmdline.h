@@ -36,10 +36,12 @@
 #include <typeinfo>
 #include <cstring>
 #include <algorithm>
-#include <cxxabi.h>
 #include <cstdlib>
 
 #include "unify_api_platform.h"
+#ifndef UNIFY_API_OS_WINDOWS
+#include <cxxabi.h>
+#endif
 
 namespace cmdline{
 
