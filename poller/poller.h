@@ -5,6 +5,8 @@ All rights reserved.
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
 #pragma once
+#include <cstring>
+
 #include <string>
 #include <atomic>
 #include <mutex>
@@ -26,6 +28,7 @@ Author: likepeng <likepeng0418@163.com>
 #include <unistd.h>
 #else
 #include <sys/epoll.h>
+#include <unistd.h>
 #endif
 
 namespace unify_api {
@@ -49,7 +52,7 @@ class Poller final {
   bool Init(std::string* err_msg = nullptr);
   bool Add(const PollerEvent&, std::string* err_msg = nullptr);
   bool Del(int fd, std::string* err_msg = nullptr);
-  int Wait(std::vector<PollerEvent>* evs, int timeout_ms = 100);
+  int Wait(std::vector<PollerEvent>* evs, int timeout_ms = 100, std::string* err_msg = nullptr);
 
  private:
   std::atomic_bool init_{false};
@@ -65,7 +68,7 @@ class Poller final {
   struct kevent* re_evs_{nullptr};
 #else
   int poll_fd_{-1};
-  int max_ev_count_{64};
+  size_t max_ev_count_{64};
   struct epoll_event* evs_{nullptr};
 #endif
 

@@ -15,7 +15,7 @@ namespace unify_api {
 #elif defined(UNIFY_API_OS_MAC)
 // TODO(likepeng)
 #else
-static PollerEventType ToPollerEventType(int ev) {
+static PollerEventType ToPollerEventType(uint32_t ev) {
   switch (ev) {
   case EPOLLIN:
     return PollerEventType::kIn;
@@ -26,7 +26,7 @@ static PollerEventType ToPollerEventType(int ev) {
   }
 }
 
-static int ToEpollType(const PollerEventType& ev) {
+static uint32_t ToEpollType(const PollerEventType& ev) {
   switch (ev) {
   case PollerEventType::kIn:
     return EPOLLIN;
@@ -168,14 +168,17 @@ bool Poller::Del(int fd, std::string* err_msg) {
   return true;
 }
 
-int Poller::Wait(std::vector<PollerEvent>* evs, int timeout_ms) {
+int Poller::Wait(std::vector<PollerEvent>* evs, int timeout_ms, std::string* err_msg) {
   if (!init_.load()) {
     return -1;
   }
   evs->clear();
 #if defined(UNIFY_API_OS_WINDOWS)
-// TODO(likepeng)
+  // TODO(likepeng)
+  (void)err_msg;
+  int ev_count = 0;
 #elif defined(UNIFY_API_OS_MAC)
+  (void)err_msg;
   struct timespec ts;
   if (timeout_ms <  0) {
     ts.tv_sec = INT_MAX;
@@ -219,7 +222,9 @@ int Poller::Wait(std::vector<PollerEvent>* evs, int timeout_ms) {
 #else
   int ev_count = epoll_wait(poll_fd_, evs_, max_ev_count_, timeout_ms);
   if (0 > ev_count) {
-    LOG(ERROR) << "epoll wait error: " << strerror(errno);
+    if (err_msg!= nullptr) {
+      *err_msg = std::string("epoll wait error: ") + strerror(errno);
+    }
     return -1;
   }
   for (int i = 0; i < ev_count; ++i) {
