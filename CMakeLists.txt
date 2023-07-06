@@ -69,6 +69,7 @@ add_subdirectory(time)
 add_subdirectory(dir)
 add_subdirectory(string_parser)
 add_subdirectory(shared_library)
+add_subdirectory(cmdline)
 
 ### export
 generate_export_header (${PROJECT_NAME}

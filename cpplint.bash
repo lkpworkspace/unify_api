@@ -18,7 +18,8 @@ function main() {
     -name "*.hxx" -or \
     -name "*.cxx" -or \
     -name "*.cuh" \
-    ')' | xargs python3 ./cpplint.py
+    ')' -and -not -path "./cmdline/*" \
+    | xargs python3 ./cpplint.py
 }
 
 main "$@"
