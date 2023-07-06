@@ -168,7 +168,10 @@ bool Poller::Del(int fd, std::string* err_msg) {
   return true;
 }
 
-int Poller::Wait(std::vector<PollerEvent>* evs, int timeout_ms, std::string* err_msg) {
+int Poller::Wait(
+    std::vector<PollerEvent>* evs,
+    int timeout_ms,
+    std::string* err_msg) {
   if (!init_.load()) {
     return -1;
   }

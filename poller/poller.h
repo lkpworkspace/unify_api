@@ -52,7 +52,9 @@ class Poller final {
   bool Init(std::string* err_msg = nullptr);
   bool Add(const PollerEvent&, std::string* err_msg = nullptr);
   bool Del(int fd, std::string* err_msg = nullptr);
-  int Wait(std::vector<PollerEvent>* evs, int timeout_ms = 100, std::string* err_msg = nullptr);
+  int Wait(std::vector<PollerEvent>* evs,
+    int timeout_ms = 100,
+    std::string* err_msg = nullptr);
 
  private:
   std::atomic_bool init_{false};
