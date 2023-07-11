@@ -4,16 +4,17 @@ All rights reserved.
 
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
-#include "poller.h"
+#include "platform/poller.h"
 
 #include <cerrno>
+#include <iostream>
 
 namespace unify_api {
 
 #if defined(UNIFY_API_OS_WINDOWS)
-// TODO(likepeng)
+// DO NOTHING
 #elif defined(UNIFY_API_OS_MAC)
-// TODO(likepeng)
+// DO NOTHING
 #else
 static PollerEventType ToPollerEventType(uint32_t ev) {
   switch (ev) {
@@ -40,7 +41,7 @@ static uint32_t ToEpollType(const PollerEventType& ev) {
 
 Poller::~Poller() {
 #if defined(UNIFY_API_OS_WINDOWS)
-// TODO(likepeng)
+  // DO NOTHING
 #elif defined(UNIFY_API_OS_MAC)
   if (poll_fd_ != -1) {
     close(poll_fd_);
@@ -70,7 +71,7 @@ bool Poller::Init(std::string* err_msg) {
     return true;
   }
 #if defined(UNIFY_API_OS_WINDOWS)
-// TOOD(likepeng)
+  evs_.reserve(max_ev_count_);
 #elif defined(UNIFY_API_OS_MAC)
   poll_fd_ = kqueue();
   if (-1 == poll_fd_) {
@@ -102,7 +103,8 @@ bool Poller::Add(const PollerEvent& poller_ev, std::string* err_msg) {
     return false;
   }
 #if defined(UNIFY_API_OS_WINDOWS)
-// TODO(likepeng)
+  std::lock_guard<std::mutex> lock(mtx_);
+  add_evs_.insert(poller_ev.fd);
 #elif defined(UNIFY_API_OS_MAC)
   (void)err_msg;
   struct kevent kev;
@@ -146,12 +148,13 @@ bool Poller::Add(const PollerEvent& poller_ev, std::string* err_msg) {
   return true;
 }
 
-bool Poller::Del(int fd, std::string* err_msg) {
+bool Poller::Del(handle_fd_t fd, std::string* err_msg) {
   if (!init_.load()) {
     return false;
   }
 #if defined(UNIFY_API_OS_WINDOWS)
-// TODO(likepeng)
+  std::lock_guard<std::mutex> lock(mtx_);
+  del_evs_.insert(fd);
 #elif defined(UNIFY_API_OS_MAC)
   (void)err_msg;
   std::lock_guard<std::mutex> lock(mtx_);
@@ -177,9 +180,21 @@ int Poller::Wait(
   }
   evs->clear();
 #if defined(UNIFY_API_OS_WINDOWS)
-  // TODO(likepeng)
   (void)err_msg;
   int ev_count = 0;
+  auto ret = WaitForMultipleObjects(evs_.size(), &evs_[0], false, timeout_ms);
+  if (ret >= WAIT_OBJECT_0 && ret < WAIT_OBJECT_0 + evs_.size()) {
+    int index = ret - WAIT_OBJECT_0;
+    PollerEvent poller_ev;
+    poller_ev.fd = evs_[index];
+    evs->push_back(poller_ev);
+    ev_count = 1;
+  } else if (ret == WAIT_TIMEOUT) {
+    ev_count = 0;
+  } else if (ret == WAIT_FAILED) {
+    ev_count = -1;
+  }
+  // TODO(likepeng) 增删事件
 #elif defined(UNIFY_API_OS_MAC)
   (void)err_msg;
   struct timespec ts;

@@ -1,5 +1,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 
+### platform
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+add_subdirectory(win)
+else()
+add_subdirectory(linux)
+endif()
+
 ### source
 get_filename_component(DIR_NAME ${CMAKE_CURRENT_LIST_DIR} NAME_WE)
 aux_source_directory(. __srcs)

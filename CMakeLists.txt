@@ -12,6 +12,9 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
+set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
+
 set(UNIFY_API_INC_DIR ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
 set(UNIFY_API_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 set(UNIFY_API_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -63,14 +66,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_D
 add_library(${PROJECT_NAME} SHARED ${CMAKE_CURRENT_SOURCE_DIR}/unify_api_version.h)
 
 ### sub dir
-add_subdirectory(env)
 add_subdirectory(macros)
-add_subdirectory(time)
-add_subdirectory(dir)
 add_subdirectory(string_parser)
-add_subdirectory(shared_library)
 add_subdirectory(cmdline)
-add_subdirectory(poller)
+add_subdirectory(time)
+add_subdirectory(platform)
 
 ### export
 generate_export_header (${PROJECT_NAME}

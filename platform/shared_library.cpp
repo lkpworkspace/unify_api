@@ -4,7 +4,7 @@ All rights reserved.
 
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
-#include "shared_library/shared_library.h"
+#include "platform/shared_library.h"
 
 namespace unify_api {
 

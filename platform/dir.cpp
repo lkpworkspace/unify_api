@@ -4,7 +4,7 @@ All rights reserved.
 
 Author: likepeng <likepeng0418@163.com>
 ****************************************************************************/
-#include "dir/dir.h"
+#include "platform/dir.h"
 #include <cstring>
 #include <iostream>
 #include "unify_api_platform.h"
@@ -64,7 +64,7 @@ stdfs::path GetSelfPath() {
 #else
   int len = readlink("proc/self/exe", path, sizeof(path));
   if (len == -1) {
-    return  stdfs::path();
+    return stdfs::path();
   }
 #endif
   if (static_cast<std::size_t>(len) >= sizeof(path)) {
